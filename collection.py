@@ -6,7 +6,7 @@ import re
 
 
 
-def save_collection(collection_id, save_path='./results', sleep_time=0.2):
+def save_collection(collection_id, save_path='./results', rewrite=False, sleep_time=0.2):
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
@@ -45,8 +45,9 @@ def save_collection(collection_id, save_path='./results', sleep_time=0.2):
         title = title.replace('/', '_')
 
         # 如果文件已存在，则跳过
-        if os.path.exists(f'{collection_path}/{i+1}-{title}.md'):
-            continue
+        if not rewrite:
+            if os.path.exists(f'{collection_path}/{i+1}-{title}.md'):
+                continue
 
         # 保存文章内容
         with open(f'{collection_path}/{i+1}-{title}.md', 'w', encoding='utf-8') as t:
@@ -64,9 +65,9 @@ def save_collection(collection_id, save_path='./results', sleep_time=0.2):
             t.write(content)
 
             if i > 0:
-                t.write(f'上一篇： [{title_list[i-1]}](./{title_list[i-1]}.md)\n\n')
+                t.write(f'上一篇： [{title_list[i-1]}](./{i}-{title_list[i-1]}.md)\n\n')
             if i < len(title_list) - 1:
-                t.write(f'下一篇： [{title_list[i+1]}](./{title_list[i+1]}.md)\n\n')
+                t.write(f'下一篇： [{title_list[i+1]}](./{i+2}-{title_list[i+1]}.md)\n\n')
 
 
 
@@ -78,4 +79,4 @@ if __name__ == '__main__':
     collection_id = 20460170
 
     # 保存合集
-    save_collection(collection_id, save_path)
+    save_collection(collection_id, save_path, rewrite=True)
