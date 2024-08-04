@@ -47,7 +47,7 @@ def get_post(blog_id, post_id):
         return None
     
 
-def get_collection_list(collection_id, blog_id, offset, limit=15, authkey=None, order=1):
+def get_collection_list(collection_id, offset, limit=15, authkey=None, order=1):
     # 获取合集详情，包括列表
     # order为返回顺序
     url = "https://api.lofter.com/v1.1/postCollection.api"
@@ -56,7 +56,8 @@ def get_collection_list(collection_id, blog_id, offset, limit=15, authkey=None, 
     'product': "lofter-android-7.6.12"
     }
 
-    payload = f"method=getCollectionDetail&offset={offset}&limit={limit}&collectionid={collection_id}&blogid={blog_id}&order={order}"
+    # payload = f"method=getCollectionDetail&offset={offset}&limit={limit}&collectionid={collection_id}&blogid={blog_id}&order={order}"
+    payload = f"method=getCollectionDetail&offset={offset}&limit={limit}&collectionid={collection_id}&order={order}"
 
     headers = {
     'Accept-Encoding': "br,gzip",

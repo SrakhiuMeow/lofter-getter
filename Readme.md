@@ -11,4 +11,10 @@ API是通过对Lofter Android客户端进行抓包分析得到的，随时可能
 
 ## 注意
 在Lofter APP中分享合集，选择复制链接，则可以得到对应的合集ID与博客ID  
-部分需要登录的操作应当传入authkey，即从浏览器获得的lofter-phone-login-auth
+部分需要登录的操作应当传入authkey，即从浏览器获得的lofter-phone-login-auth  
+需要安装brotli，否则会报错
+
+## 安装环境
+```bash
+pip install -r requirements.txt
+```
