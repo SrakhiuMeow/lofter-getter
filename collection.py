@@ -57,17 +57,23 @@ def save_collection(collection_id, save_path='./results', rewrite=False, sleep_t
             # 去除多余标签
             content = content.replace('</p>', '')
             content = content.replace('　　', '')
+            content = content.replace(' \n', '\n')
             content = content.replace('&nbsp;', '')
             content = content.replace('<br /> ', '')
             pattern = re.compile(r'<p id=".*"  >')
             content = re.sub(pattern, '', content)
+            pattern = re.compile(r'——*—')
+            content = re.sub(pattern, '\n---\n', content)
+            pattern = re.compile(r'(.)\n(.)')
+            content = re.sub(pattern, r'\1\n\n\2', content)
+            # pattern = re.compile(r'<p>')
 
             t.write(content)
 
             if i > 0:
-                t.write(f'上一篇： [{title_list[i-1]}](./{i}-{title_list[i-1]}.md)\n\n')
+                t.write(f'\n\n上一篇： [{title_list[i-1]}](./{i}-{title_list[i-1]}.md)\n')
             if i < len(title_list) - 1:
-                t.write(f'下一篇： [{title_list[i+1]}](./{i+2}-{title_list[i+1]}.md)\n\n')
+                t.write(f'\n下一篇： [{title_list[i+1]}](./{i+2}-{title_list[i+1]}.md)\n')
 
 
 
