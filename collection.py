@@ -32,10 +32,10 @@ def save_collection(collection_id, save_path='./results', rewrite=False, sleep_t
     title_list = []
     with open(f'{save_path}/{collection_name}.md', 'w', encoding='utf-8') as f:
         f.write(f'### 合集名：{collection_name}，文章数量：{post_count}\n')
-        for c in collection_list:
+        for i, c in enumerate(collection_list):
             title = c['post']['title']
             title = title.replace('/', '_')
-            f.write(f'- [{title}]({collection_name}/{title}.md)\n')
+            f.write(f'- [{title}]({collection_name}/{i+1}-{title}.md)\n')
             title_list.append(title)
 
         
