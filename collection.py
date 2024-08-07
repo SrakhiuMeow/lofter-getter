@@ -38,6 +38,10 @@ def save_collection(collection_id, save_img=True, save_path='./results', rewrite
     if not os.path.exists(collection_path):
         os.makedirs(collection_path)
 
+    img_path = f'{collection_path}/images'
+    if save_img and not os.path.exists(img_path):
+        os.makedirs(img_path)
+
     # with open(f'{save_path}/{collection_name}.json', 'w', encoding='utf-8') as f:
     #     f.write(json.dumps(collection_list, ensure_ascii=False))
 
@@ -67,6 +71,9 @@ def save_collection(collection_id, save_img=True, save_path='./results', rewrite
         title = title_list[i]
         print(title)
 
+        if i < 107:
+            continue
+
         # 如果文件已存在，则跳过
         if not rewrite:
             if os.path.exists(f'{collection_path}/{i+1}-{title}.md'):
@@ -82,7 +89,8 @@ def save_collection(collection_id, save_img=True, save_path='./results', rewrite
             
             # 保存图片并替换URL
             if save_img:
-                content = download_img(content, collection_path)
+                content, img_list = replace_img_url(content, cvt2local=True)
+                download_img(img_list, img_path)
 
             t.write(content)
 
