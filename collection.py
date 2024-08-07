@@ -4,10 +4,11 @@ import time
 import os
 import re
 from utils.string_proc import make_valid_filename, escape_for_url, html2md
+from utils.image_proc import replace_img_url, download_img
 
 
 
-def save_collection(collection_id, save_path='./results', rewrite=False, sleep_time=0.2):
+def save_collection(collection_id, save_img=True, save_path='./results', rewrite=False, sleep_time=0.2):
     '''
     保存合集内容
 
@@ -78,6 +79,10 @@ def save_collection(collection_id, save_path='./results', rewrite=False, sleep_t
 
             # 转换HTML为Markdown
             content = html2md(content)
+            
+            # 保存图片并替换URL
+            if save_img:
+                content = download_img(content, collection_path)
 
             t.write(content)
 
@@ -96,4 +101,4 @@ if __name__ == '__main__':
     collection_id = 20460170
 
     # 保存合集
-    save_collection(collection_id, save_path, rewrite=False)
+    save_collection(collection_id, save_path, rewrite=True)
