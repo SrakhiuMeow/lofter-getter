@@ -41,6 +41,7 @@ def save_collection(collection_id, save_path='./results', rewrite=False, sleep_t
     #     f.write(json.dumps(collection_list, ensure_ascii=False))
 
     title_list = []
+    title_url_list = []
     # 保存合集目录
     with open(f'{save_path}/{collection_name}.md', 'w', encoding='utf-8') as f:
         f.write(f'### 合集名：{collection_name}，文章数量：{post_count}\n')
@@ -52,6 +53,7 @@ def save_collection(collection_id, save_path='./results', rewrite=False, sleep_t
             title_url = escape_for_url(title)
 
             title_list.append(title)
+            title_url_list.append(title_url)
 
             if os.path.exists(f'{collection_path}/{i+1}-{title}.md'):
                 f.write(f'- [{title}]({collection_name}/{i+1}-{title_url}.md)\n')
@@ -80,9 +82,9 @@ def save_collection(collection_id, save_path='./results', rewrite=False, sleep_t
             t.write(content)
 
             if i > 0:
-                t.write(f'\n\n上一篇： [{title_list[i-1]}](./{i}-{title_list[i-1]}.md)\n')
+                t.write(f'\n\n上一篇： [{title_list[i-1]}](./{i}-{title_url_list[i-1]}.md)\n')
             if i < len(title_list) - 1:
-                t.write(f'\n下一篇： [{title_list[i+1]}](./{i+2}-{title_list[i+1]}.md)\n')
+                t.write(f'\n下一篇： [{title_list[i+1]}](./{i+2}-{title_url_list[i+1]}.md)\n')
 
 
 
