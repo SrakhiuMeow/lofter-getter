@@ -71,9 +71,6 @@ def save_collection(collection_id, save_img=True, save_path='./results', rewrite
         title = title_list[i]
         print(title)
 
-        if i < 107:
-            continue
-
         # 如果文件已存在，则跳过
         if not rewrite:
             if os.path.exists(f'{collection_path}/{i+1}-{title}.md'):
