@@ -3,10 +3,21 @@ import json
 import time
 import os
 import re
+from utils.string_proc import make_valid_filename, escape_for_url, html2md
 
 
 
 def save_collection(collection_id, save_path='./results', rewrite=False, sleep_time=0.2):
+    '''
+    保存合集内容
+
+    Args:
+    collection_id: 合集ID
+    save_path: 保存路径，默认为'./results'
+    rewrite: 是否覆盖已存在的文件，默认为False
+    sleep_time: 请求间隔，默认为0.2秒
+    '''
+    
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
@@ -30,19 +41,28 @@ def save_collection(collection_id, save_path='./results', rewrite=False, sleep_t
     #     f.write(json.dumps(collection_list, ensure_ascii=False))
 
     title_list = []
+    # 保存合集目录
     with open(f'{save_path}/{collection_name}.md', 'w', encoding='utf-8') as f:
         f.write(f'### 合集名：{collection_name}，文章数量：{post_count}\n')
         for i, c in enumerate(collection_list):
             title = c['post']['title']
-            title = title.replace('/', '_')
-            f.write(f'- [{title}]({collection_name}/{i+1}-{title}.md)\n')
+
+            # 调整标题格式
+            title = make_valid_filename(title)
+            title_url = escape_for_url(title)
+
             title_list.append(title)
 
-        
+            if os.path.exists(f'{collection_path}/{i+1}-{title}.md'):
+                f.write(f'- [{title}]({collection_name}/{i+1}-{title_url}.md)\n')
+            else:
+                f.write(f'- **[{title}]({collection_name}/{i+1}-{title_url}.md)**\n')
+            
+
+    # 保存文章内容
     for i, c in enumerate(collection_list):
-        title = c['post']['title']
+        title = title_list[i]
         print(title)
-        title = title.replace('/', '_')
 
         # 如果文件已存在，则跳过
         if not rewrite:
@@ -54,19 +74,8 @@ def save_collection(collection_id, save_path='./results', rewrite=False, sleep_t
             t.write(f'## {title}\n')
             content = c['post']['content']
 
-            # 去除多余标签
-            content = content.replace('</p>', '')
-            content = content.replace('　　', '')
-            content = content.replace(' \n', '\n')
-            content = content.replace('&nbsp;', '')
-            content = content.replace('<br /> ', '')
-            pattern = re.compile(r'<p id=".*"  >')
-            content = re.sub(pattern, '', content)
-            pattern = re.compile(r'——*—')
-            content = re.sub(pattern, '\n---\n', content)
-            pattern = re.compile(r'(.)\n(.)')
-            content = re.sub(pattern, r'\1\n\n\2', content)
-            # pattern = re.compile(r'<p>')
+            # 转换HTML为Markdown
+            content = html2md(content)
 
             t.write(content)
 
@@ -85,4 +94,4 @@ if __name__ == '__main__':
     collection_id = 20460170
 
     # 保存合集
-    save_collection(collection_id, save_path, rewrite=True)
+    save_collection(collection_id, save_path, rewrite=False)
