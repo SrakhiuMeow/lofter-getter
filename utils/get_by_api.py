@@ -1,11 +1,11 @@
 import requests
 import json
 
-def get_subs_list(authkey):
+def get_subs(authkey, offset=0):
     # 获取订阅列表，需要登录信息(LOFTER-PHONE-LOGIN-AUTH) 
     url = "https://api.lofter.com/newapi/subscribeCollection/list.json"
     params = {
-    'offset': "0"
+    'offset': offset
     }
 
     headers = {
@@ -17,7 +17,7 @@ def get_subs_list(authkey):
     response = requests.get(url, params=params, headers=headers)
 
     if response.status_code == 200:
-        return json.loads(response.text)['response']
+        return json.loads(response.text)
     else:
         return None
 

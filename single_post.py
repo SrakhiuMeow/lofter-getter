@@ -4,7 +4,7 @@ import os
 
 if __name__ == '__main__':
     # 保存路径
-    save_path = './results/'
+    save_path = './results'
     if not os.path.exists(save_path):
         os.makedirs(save_path)
     
@@ -15,5 +15,5 @@ if __name__ == '__main__':
     posts = get_post(blog_id, post_id)['posts']
     for i in posts:
         print(i['post']['title'])
-        with open(f'{save_path}{i["post"]["title"].replace("/", "_")}.html', 'w', encoding='utf-8') as f:
+        with open(f'{save_path}/{i["post"]["title"].replace("/", "_")}.html', 'w', encoding='utf-8') as f:
             f.write(i['post']['content'])
