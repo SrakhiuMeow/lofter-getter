@@ -8,7 +8,7 @@ from utils.image_proc import replace_img_url, download_img
 
 
 
-def save_collection(collection_id, save_img=True, save_path='./results', rewrite=False, sleep_time=0.2):
+def save_collection(collection_id, save_path='./results', save_img=True,rewrite=False, sleep_time=0.2):
     '''
     保存合集内容
 
@@ -94,7 +94,7 @@ def save_collection(collection_id, save_img=True, save_path='./results', rewrite
             if i > 0:
                 t.write(f'\n\n上一篇： [{title_list[i-1]}](./{i}-{title_url_list[i-1]}.md)\n')
             if i < len(title_list) - 1:
-                t.write(f'\n下一篇： [{title_list[i+1]}](./{i+2}-{title_url_list[i+1]}.md)\n')
+                t.write(f'\n\n下一篇： [{title_list[i+1]}](./{i+2}-{title_url_list[i+1]}.md)\n')
 
 
 
@@ -103,7 +103,7 @@ if __name__ == '__main__':
     save_path = './results'
 
     # 合集ID，可根据APP端的分享链接获取
-    collection_id = 20460170
+    collection_id = 21297998
 
     # 保存合集
-    save_collection(collection_id, save_path, rewrite=True)
+    save_collection(collection_id, save_path, save_img=False, rewrite=False)

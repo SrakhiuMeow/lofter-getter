@@ -50,8 +50,8 @@ def html2md(content):
 
 
     # 调整为markdown格式
-    pattern = re.compile(r'——*—')
-    content = re.sub(pattern, '\n---\n', content)
+    pattern = re.compile(r'——*—\n')
+    content = re.sub(pattern, '\n---\n\n', content)
     pattern = re.compile(r'(.)\n(.)')
     content = re.sub(pattern, r'\1\n\n\2', content)
 
