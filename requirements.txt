@@ -1,2 +1,4 @@
 requests
 brotli
+browsercookie
+pysqlite

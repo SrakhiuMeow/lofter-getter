@@ -1,10 +1,11 @@
 import requests
 import json
 from utils.get_by_api import get_subs
+from utils.cookie import get_lofter_authkey
 import os
 import time
 
-def save_subs(authkey, save_path='./results', sleep_time=0.2):
+def save_subs(authkey, save_path='./results', sleep_time=0.1):
     '''
     保存订阅列表
 
@@ -30,14 +31,17 @@ def save_subs(authkey, save_path='./results', sleep_time=0.2):
             collections += data['collections']
 
     with open(f'{save_path}/subscription.json', 'w', encoding='utf-8') as f:
-        json.dump(collections, f, ensure_ascii=False)
+        json.dump(collections, f, ensure_ascii=False, indent=4)
+        print(f'订阅信息保存至 {save_path}/subscription.json')
 
 
 if __name__ == '__main__':
     # 保存路径
     save_path = './results/'
 
-    # 需要登录信息(LOFTER-PHONE-LOGIN-AUTH)，可从浏览器获取
-    authkey = 'your_authkey_here'
+    # 需要登录信息(LOFTER-PHONE-LOGIN-AUTH)
+    # 可自行填写或者自动获取（需要浏览器已经登陆lofter）
+    authkey = get_lofter_authkey(browser='default')  # 自动获取
+    # authkey = 'your_authkey_here' # 手动填写
 
-    save_subs(authkey, save_path)
+    save_subs(authkey, save_path, sleep_time=0.1)
