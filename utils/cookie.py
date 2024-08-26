@@ -1,4 +1,4 @@
-import browsercookie
+import browser_cookie3 as browsercookie
 import requests
 
 def get_lofter_authkey(browser='default'):

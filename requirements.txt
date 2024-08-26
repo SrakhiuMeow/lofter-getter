@@ -1,4 +1,4 @@
 requests
 brotli
-browsercookie
+browser-cookie3
 pysqlite

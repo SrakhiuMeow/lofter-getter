@@ -29,6 +29,7 @@ rewrite参数决定是否替换本地已存在的合集文件
 暂时没有进一步处理数据的功能，现在可以用来获取当前订阅的合集ID
 
 
+
 ## 安装环境
 ```bash
 pip install -r requirements.txt
