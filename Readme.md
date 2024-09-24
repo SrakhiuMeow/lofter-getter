@@ -17,6 +17,14 @@ API是通过对Lofter Android客户端进行抓包分析得到的，随时可能
 
 请合理使用该脚本，不得滥用
 
+**使用之前需要安装依赖**
+```bash
+pip install -r requirements.txt
+```
+否则会报错
+
+
+
 ## 程序文件说明
 #### collection.py
 根据合集ID批量下载合集内容  
@@ -29,8 +37,21 @@ rewrite参数决定是否替换本地已存在的合集文件
 暂时没有进一步处理数据的功能，现在可以用来获取当前订阅的合集ID
 
 
-
-## 安装环境
-```bash
-pip install -r requirements.txt
+## 常见问题
 ```
+  File "get_by_api.py", line 72, in get_collection_list
+    return json.loads(response.text)['response']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "save_content.py", line 41, in save_single_collection
+    collection = get_collection_list(collection_id,  0)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "collection.py", line 10, in <module>
+    save_single_collection(collection_id, save_path, save_img=False, rewrite=False)
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+```
+ 
+需要安装brotli  
+`pip install brotli`  
+或者在程序根目录下执行  
+`pip install -r requirements.txt`  
+安装所有依赖库

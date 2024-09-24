@@ -27,10 +27,10 @@ def make_valid_filename(filename):
 def escape_for_url(s):
     # 替换URL中的特殊字符，用于 markdown 链接
 
-    old = [' ', '%', '#', '&','(', ')', 
+    old = ['%', ' ', '#', '&','(', ')', 
            '+', ',', '/', ':', ';', '=', 
            '?', '@', '[', ']']
-    new = ['%20', '%25', '%23', '%26', '%28', '%29', 
+    new = ['%25', '%20', '%23', '%26', '%28', '%29', 
            '%2B', '%2C', '%2F', '%3A', '%3B', '%3D', 
            '%3F', '%40', '%5B', '%5D']
     s = replace(s, old, new)
@@ -45,7 +45,7 @@ def html2md(content):
     content = content.replace('</p>', '')
     content = content.replace('　　', '')
     content = content.replace(' \n', '\n')
-    content = content.replace('&nbsp;', '')
+    content = content.replace('&nbsp;', ' ')
     content = content.replace('<br /> ', '')
 
 
