@@ -1,5 +1,10 @@
 import requests
 import json
+try:
+    import brotli
+except ImportError:
+    print('请先安装brotli，运行"pip install brotli"即可')
+    exit(1)
 
 def get_subs(authkey, offset=0):
     # 获取订阅列表，需要登录信息(LOFTER-PHONE-LOGIN-AUTH) 

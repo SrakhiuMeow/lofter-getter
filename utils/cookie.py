@@ -1,4 +1,8 @@
-import browser_cookie3 as browsercookie
+try:
+    import browser_cookie3 as browsercookie
+except ImportError:
+    print('请先安装browser_cookie3，运行"pip install browser_cookie3"即可')
+    exit(1)
 import requests
 
 def get_lofter_authkey(browser='default'):
@@ -20,5 +24,7 @@ def get_lofter_authkey(browser='default'):
         authkey = cookie['LOFTER-PHONE-LOGIN-AUTH']
     except:
         authkey = None
+        print('请在浏览器中登录lofter后再重试')
+        exit(1)
     
     return authkey
