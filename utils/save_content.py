@@ -24,13 +24,14 @@ def save_single_post(blog_id, post_id, save_path='./results', rewrite=False):
             f.write(i['post']['content'])
 
 
-def save_single_collection(collection_id, save_path='./results', save_img=True,rewrite=False, sleep_time=0.2):
+def save_single_collection(collection_id, save_path='./results', save_img=True, limit_once=50, rewrite=False, sleep_time=0.2):
     '''
     保存合集内容
 
     Args:
     collection_id: 合集ID
     save_path: 保存路径，默认为'./results'
+    limit_once: 每次获取文章数量，默认为50
     rewrite: 是否覆盖已存在的文件，默认为False
     sleep_time: 请求间隔，默认为0.2秒
     '''
@@ -38,17 +39,19 @@ def save_single_collection(collection_id, save_path='./results', save_img=True,r
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
-    collection = get_collection_list(collection_id,  0)
+    collection = get_collection_list(collection_id,  0, limit_once)
 
     post_count = collection['collection']['postCount']
     collection_name = collection['collection']['name']
+    collection_tags = collection['collection']['tags'].split(',')
+    collection_description = collection['collection']['description']
     print(f'合集名：{collection_name}，文章数量：{post_count}')
 
 
     collection_list = []
-    for i in range(0, post_count, 15):
+    for i in range(0, post_count, limit_once):
         time.sleep(sleep_time)
-        collection_list += get_collection_list(collection_id,  i)['items']
+        collection_list += get_collection_list(collection_id,  i, limit_once)['items']
 
     collection_path = f'{save_path}/{collection_name}'
     if not os.path.exists(collection_path):
@@ -65,7 +68,10 @@ def save_single_collection(collection_id, save_path='./results', save_img=True,r
     title_url_list = []
     # 保存合集目录
     with open(f'{save_path}/{collection_name}.md', 'w', encoding='utf-8') as f:
-        f.write(f'### 合集名：{collection_name}，文章数量：{post_count}\n')
+        f.write(f'### {collection_name}\n')
+        f.write(collection_description + '\n\n')
+        f.write('---\n')
+        f.write(f'#### 目录(共{post_count}篇)\n')
         for i, c in enumerate(collection_list):
             title = c['post']['title']
 
@@ -80,7 +86,10 @@ def save_single_collection(collection_id, save_path='./results', save_img=True,r
                 f.write(f'- [{title}]({collection_name}/{i+1}-{title_url}.md)\n')
             else:
                 f.write(f'- **[{title}]({collection_name}/{i+1}-{title_url}.md)**\n')
-            
+        f.write('---\n')
+        f.write('#### 标签\n')
+        for tag in collection_tags:
+            f.write(f'[{tag}](https://www.lofter.com/tag/{tag})  ')
 
     # 保存文章内容
     for i, c in enumerate(collection_list):
@@ -94,7 +103,7 @@ def save_single_collection(collection_id, save_path='./results', save_img=True,r
 
         # 保存文章内容
         with open(f'{collection_path}/{i+1}-{title}.md', 'w', encoding='utf-8') as t:
-            t.write(f'## {title}\n')
+            t.write(f'## [{title}]({c['post']['blogPageUrl']})\n')
             content = c['post']['content']
 
             # 转换HTML为Markdown
@@ -107,6 +116,19 @@ def save_single_collection(collection_id, save_path='./results', save_img=True,r
 
             t.write(content)
 
+            t.write('\n\n---\n')
+            t.write(f'#### 热门评论\n')
+            for comment in c['hotComments']:
+                nickname = comment['publisherMainBlogInfo']['blogNickName']
+                bloghome = comment['publisherMainBlogInfo']['homePageUrl']
+                t.write(f'- [{nickname}]({bloghome}):  {comment["content"]}\n')
+            
+            t.write('\n\n---\n')
+            t.write(f'#### 标签\n')
+            for tag in c['post']['tagList']:
+                t.write(f'[{tag}](https://www.lofter.com/tag/{tag})  ')
+
+            t.write('\n\n---\n')
             if i > 0:
                 t.write(f'\n\n上一篇： [{title_list[i-1]}](./{i}-{title_url_list[i-1]}.md)\n')
             if i < len(title_list) - 1:

@@ -12,8 +12,8 @@ post_id = 0
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Save single post from lofter')
     
-    parser.add_argument('blog_id', type=int, default=blog_id, help='Blog ID')
-    parser.add_argument('post_id', type=int, default=post_id, help='Post ID')
+    parser.add_argument('--blog_id', type=int, default=blog_id, help='Blog ID')
+    parser.add_argument('--post_id', type=int, default=post_id, help='Post ID')
     parser.add_argument('--save_path', type=str, default=save_path, help='Save path')
     parser.add_argument('--rewrite', action='store_true', help='Rewrite existing files')
 
