@@ -193,6 +193,11 @@ def save_subs(authkey, save_path='./results', sleep_time=0.1):
             data = get_subs(authkey, i)['data']
             collections += data['collections']
 
+    for c in collections:
+        collection_id = c['collectionId']
+        collection_name = c['name']
+        print(f'合集名：{collection_name}，合集ID：{collection_id}')
+
     with open(f'{save_path}/subscription.json', 'w', encoding='utf-8') as f:
         json.dump(collections, f, ensure_ascii=False, indent=4)
         print(f'订阅信息保存至 {save_path}/subscription.json')
