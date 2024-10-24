@@ -6,11 +6,12 @@ except ImportError:
     print('请先安装brotli，运行"pip install brotli"即可')
     exit(1)
 
-def get_subs(authkey, offset=0):
+def get_subs(authkey, offset=0, limit_once=50):
     # 获取订阅列表，需要登录信息(LOFTER-PHONE-LOGIN-AUTH) 
     url = "https://api.lofter.com/newapi/subscribeCollection/list.json"
     params = {
-    'offset': offset
+    'offset': offset,
+    'limit': limit_once
     }
 
     headers = {

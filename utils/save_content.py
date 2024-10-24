@@ -168,7 +168,7 @@ def save_all_collections(authkey, save_path='./results', save_img=True, rewrite=
                                rewrite=rewrite, sleep_time=sleep_time)
 
 
-def save_subs(authkey, save_path='./results', sleep_time=0.1):
+def save_subs(authkey, save_path='./results', sleep_time=0.1, limit_once=50):
     '''
     保存订阅列表
 
@@ -187,10 +187,10 @@ def save_subs(authkey, save_path='./results', sleep_time=0.1):
     subscribeCollectionCount = data['subscribeCollectionCount']
     collections = data['collections']
 
-    if subscribeCollectionCount > 10:
-        for i in range(10, subscribeCollectionCount, 10):
+    if subscribeCollectionCount > limit_once:
+        for i in range(limit_once, subscribeCollectionCount, limit_once):
             time.sleep(sleep_time)
-            data = get_subs(authkey, i)['data']
+            data = get_subs(authkey, i, limit_once)['data']
             collections += data['collections']
 
     for c in collections:
