@@ -1,6 +1,6 @@
 import requests
 import json
-from utils.get_by_api import get_subs, get_collection_list
+from utils.get_by_api import get_subs, get_collection_list, get_history
 from utils.get_by_api import get_post
 from utils.proc_str import make_valid_filename, escape_for_url, html2md
 from utils.proc_img import replace_img_url, download_img
@@ -195,6 +195,9 @@ def save_subs(authkey, save_path='./results', sleep_time=0.1, limit_once=50):
 
     for c in collections:
         collection_id = c['collectionId']
+        if not c['valid']:
+            print(f'合集{collection_id}已失效')
+            continue
         collection_name = c['name']
         print(f'合集名：{collection_name}，合集ID：{collection_id}')
 
@@ -202,3 +205,59 @@ def save_subs(authkey, save_path='./results', sleep_time=0.1, limit_once=50):
         json.dump(collections, f, ensure_ascii=False, indent=4)
         print(f'订阅信息保存至 {save_path}/subscription.json')
 
+def save_history(authkey, blogdomain, save_path='./results', sleep_time=0.1, limit_once=50):
+    '''
+    保存历史记录
+
+    Args:
+    authkey: 登录信息(LOFTER-PHONE-LOGIN-AUTH)
+    save_path: 保存路径，默认为'./results'
+    sleep_time: 请求间隔，默认为0.2秒
+    '''
+
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+
+    if not os.path.exists(save_path+'/history'):
+        os.makedirs(save_path+'/history')
+
+    start = 0 # 起始位置
+    data = get_history(authkey, blogdomain, start, limit_once)
+    historyCount = data['count']
+    posts = data['items']
+
+    if historyCount > limit_once:
+        for i in range(limit_once, historyCount, limit_once):
+            time.sleep(sleep_time)
+            data = get_history(authkey, blogdomain, i, limit_once)
+            posts += data['items']
+
+    for p in posts:
+        p = p['post']
+        post_id = p['id']
+        if p['blogId'] == 0:
+            continue
+        try:
+            post_title = p['title']
+        except:
+            continue
+        if len(post_title) == 0:
+            post_title = '无标题'+str(post_id)
+        print(f'文章标题：{post_title}，文章ID：{post_id}')
+        with open(f'{save_path}/history/{post_title}.md', 'w', encoding='utf-8') as t:
+            t.write(f'## [{post_title}]({p['blogPageUrl']})\n')
+            content = p['content']
+            # 转换HTML为Markdown
+            content = html2md(content)
+            
+            t.write(content)
+
+            t.write('\n\n---\n')
+            t.write(f'#### 标签\n')
+            for tag in p['tagList']:
+                t.write(f'[{tag}](https://www.lofter.com/tag/{tag})  ')
+            
+
+    with open(f'{save_path}/history.json', 'w', encoding='utf-8') as f:
+        json.dump(posts, f, ensure_ascii=False, indent=4)
+        print(f'历史记录保存至 {save_path}/history.json')
