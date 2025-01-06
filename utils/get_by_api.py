@@ -118,6 +118,23 @@ def get_user_info(user_id, authkey):
 
     return json.loads(response.text)['response']
 
+def get_my_info(authkey):
+    # 获取我的信息
+    url = "https://api.lofter.com/v1.1/usercounts.api"
+
+    params = {
+        'product': "lofter-android-7.6.12"
+    }
+
+    headers = {
+        'User-Agent': "LOFTER-Android 7.6.12 (V2272A; Android 13; null) WIFI",
+        'Accept-Encoding': "br,gzip",
+        'lofter-phone-login-auth': authkey,
+    }
+
+    response = requests.get(url, params=params, headers=headers)
+
+    return json.loads(response.text)['response']
 
 
 def get_history(authkey, blogdomain, offset=0, limit=50):

@@ -205,7 +205,7 @@ def save_subs(authkey, save_path='./results', sleep_time=0.1, limit_once=50):
         json.dump(collections, f, ensure_ascii=False, indent=4)
         print(f'订阅信息保存至 {save_path}/subscription.json')
 
-def save_history(authkey, blogdomain, save_path='./results', sleep_time=0.1, limit_once=50):
+def save_history(authkey, blogdomain, save_path='./results', sleep_time=0.1, limit_once=50, save_img=True):
     '''
     保存历史记录
 
@@ -220,6 +220,10 @@ def save_history(authkey, blogdomain, save_path='./results', sleep_time=0.1, lim
 
     if not os.path.exists(save_path+'/history'):
         os.makedirs(save_path+'/history')
+
+    img_path = save_path+'/history/images'
+    if save_img and not os.path.exists(img_path):
+        os.makedirs(img_path)
 
     start = 0 # 起始位置
     data = get_history(authkey, blogdomain, start, limit_once)
@@ -239,6 +243,7 @@ def save_history(authkey, blogdomain, save_path='./results', sleep_time=0.1, lim
             continue
         try:
             post_title = p['title']
+            post_title = make_valid_filename(post_title)
         except:
             continue
         if len(post_title) == 0:
@@ -249,6 +254,10 @@ def save_history(authkey, blogdomain, save_path='./results', sleep_time=0.1, lim
             content = p['content']
             # 转换HTML为Markdown
             content = html2md(content)
+
+            if save_img:
+                content, img_list = replace_img_url(content, cvt2local=True)
+                download_img(img_list, img_path)
             
             t.write(content)
 

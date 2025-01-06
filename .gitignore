@@ -167,3 +167,4 @@ configs/
 test*/
 results/
 tempCodeRunnerFile.py
+.DS_Store
