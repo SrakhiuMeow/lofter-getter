@@ -11,12 +11,15 @@ if __name__ == '__main__':
     parser.add_argument('--save_path', type=str, default=save_path, help='Save path')
     parser.add_argument('--save_img', action='store_true', help='Save images')
     parser.add_argument('--limit_once', type=int, default=50, help='Limit of fetching once')
-    parser.add_argument('--browser', type=str, help='default')
+    parser.add_argument('--browser', type=str, default='default')
+    parser.add_argument('--authkey', type=str, default='', help='LOFTER-PHONE-LOGIN-AUTH')
     args = parser.parse_args()
 
-    authkey = get_lofter_authkey(browser=args.browser)
 
-
+    if args.authkey:
+        authkey = args.authkey
+    else:
+        authkey = get_lofter_authkey(browser=args.browser)
 
 
     my_info = get_my_info(authkey)

@@ -34,7 +34,7 @@ python collection.py --collection_id 合集ID
 ```
 
 可选参数：
-- `--save-path 保存路径` 指定保存路径，默认在当前目录的results文件内
+- `--save_path 保存路径` 指定保存路径，默认在当前目录的results文件内
 - `--save_img` 将图片内容保存到本地(默认保存图片链接)
 - `--rewrite` 覆盖本地已下载的内容
 - `--limit_once 单次抓取数` 单次抓取的文章数量(默认50张)
@@ -45,9 +45,38 @@ python collection.py --collection_id 合集ID
 目前会将合集内容以md的形式保存下来
 
 ### subscrption.py
-根据从浏览器获取的登录信息获得订阅合集的信息  
+根据从浏览器获取的登录信息获得订阅合集的信息 
+```bash
+python subscription.py
+```
+
+可选参数：
+- `--save_path 保存路径` 指定保存路径，默认在当前目录的results文件内
+- `--limit_once 单次抓取数` 单次抓取的文章数量(默认50张)
+- `--browser 浏览器` 指定从哪个浏览器获取lofter登录信息，可以为firefox, chrome, safari等
+- `--authkey lofter登录信息` 如果自动获取登录信息失败的话，可以手动从浏览器cookie里面复制LOFTER-PHONE-LOGIN-AUTH的值来使用
+ 
 返回当前登录账号订阅的合集名与对应ID  
 并将详细信息保存至./results/subscription.json
+
+使用前需要在浏览器中登录Lofter账号，否则会报错
+
+### history.py
+获取当前用户的历史记录(移动端)
+```bash
+python history.py
+```
+
+可选参数：
+- `--save-path 保存路径` 指定保存路径，默认在当前目录的results文件内
+- `--save_img` 将图片内容保存到本地(默认保存图片链接)
+- `--limit_once 单次抓取数` 单次抓取的文章数量(默认50张)
+- `--browser 浏览器` 指定从哪个浏览器获取lofter登录信息，可以为firefox, chrome, safari等
+-  `--authkey lofter登录信息` 如果自动获取登录信息失败的话，可以手动从浏览器cookie里面复制LOFTER-PHONE-LOGIN-AUTH的值来使用
+
+返回当前登录账号历史记录中的文章名称与对应ID 
+将详细信息保存至./results/subscription.json
+历史记录中的文章会被保存到./results/history中
 
 使用前需要在浏览器中登录Lofter账号，否则会报错
 
