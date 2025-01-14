@@ -8,14 +8,21 @@ from utils.cookie import get_lofter_authkey
 import os
 import time
 
+
 def save_single_post(blog_id, post_id, save_path='./results', rewrite=False):
+    '''
+    保存单个文章内容
+
+    Args:
+    blog_id: 博客ID
+    post_id: 文章ID
+    save_path: 保存路径，默认为'./results'
+    rewrite: 是否覆盖已存在的文件，默认为False
+    '''
+    
     save_path = './results'
     if not os.path.exists(save_path):
         os.makedirs(save_path)
-    
-    # 博客ID和文章ID，可根据APP端的分享链接获取
-    blog_id = 0
-    post_id = 0
     
     posts = get_post(blog_id, post_id)['posts']
     for i in posts:
