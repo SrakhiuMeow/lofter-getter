@@ -31,7 +31,7 @@ def save_single_post(blog_id, post_id, save_path='./results', rewrite=False):
             f.write(i['post']['content'])
 
 
-def save_single_collection(collection_id, save_path='./results', save_img=True, limit_once=50, rewrite=False, sleep_time=0.2):
+def save_single_collection(collection_id, save_path='./results', save_img=True, limit_once=50, rewrite=False, sleep_time=0.2, authkey=None):
     '''
     保存合集内容
 
@@ -46,7 +46,7 @@ def save_single_collection(collection_id, save_path='./results', save_img=True, 
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
-    collection = get_collection_list(collection_id,  0, limit_once)
+    collection = get_collection_list(collection_id,  0, limit_once, authkey=authkey)
 
     post_count = collection['collection']['postCount']
     collection_name = collection['collection']['name']
@@ -58,7 +58,7 @@ def save_single_collection(collection_id, save_path='./results', save_img=True, 
     collection_list = []
     for i in range(0, post_count, limit_once):
         time.sleep(sleep_time)
-        collection_list += get_collection_list(collection_id,  i, limit_once)['items']
+        collection_list += get_collection_list(collection_id,  i, limit_once, authkey=authkey)['items']
 
     collection_path = f'{save_path}/{collection_name}'
     if not os.path.exists(collection_path):
@@ -68,8 +68,8 @@ def save_single_collection(collection_id, save_path='./results', save_img=True, 
     if save_img and not os.path.exists(img_path):
         os.makedirs(img_path)
 
-    # with open(f'{save_path}/{collection_name}.json', 'w', encoding='utf-8') as f:
-    #     f.write(json.dumps(collection_list, ensure_ascii=False))
+    with open(f'{save_path}/{collection_name}.json', 'w', encoding='utf-8') as f:
+        f.write(json.dumps(collection_list, ensure_ascii=False))
 
     title_list = []
     title_url_list = []
@@ -122,14 +122,22 @@ def save_single_collection(collection_id, save_path='./results', save_img=True, 
                 download_img(img_list, img_path)
 
             t.write(content)
-
-            t.write('\n\n---\n')
-            t.write(f'#### 热门评论\n')
-            for comment in c['hotComments']:
-                nickname = comment['publisherMainBlogInfo']['blogNickName']
-                bloghome = comment['publisherMainBlogInfo']['homePageUrl']
-                t.write(f'- [{nickname}]({bloghome}):  {comment["content"]}\n')
             
+            if 'hotComments' in c and len(c['hotComments']) > 0:
+                t.write('\n\n---\n')
+                t.write(f'#### 热门评论\n')
+                for comment in c['hotComments']:
+                    nickname = comment['publisherMainBlogInfo']['blogNickName']
+                    bloghome = comment['publisherMainBlogInfo']['homePageUrl']
+                    t.write(f'- [{nickname}]({bloghome}):  {comment["content"]}\n')
+            elif 'comments' in c and len(c['comments']) > 0:
+                t.write('\n\n---\n')
+                t.write(f'#### 最新评论\n')
+                for comment in c['comments']:
+                    nickname = comment['publisherMainBlogInfo']['blogNickName']
+                    bloghome = comment['publisherMainBlogInfo']['homePageUrl']
+                    t.write(f'- [{nickname}]({bloghome}):  {comment["content"]}\n') 
+                
             t.write('\n\n---\n')
             t.write(f'#### 标签\n')
             for tag in c['post']['tagList']:
