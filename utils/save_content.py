@@ -110,7 +110,7 @@ def save_single_collection(collection_id, save_path='./results', save_img=True, 
 
         # 保存文章内容
         with open(f'{collection_path}/{i+1}-{title}.md', 'w', encoding='utf-8') as t:
-            t.write(f'## [{title}]({c['post']['blogPageUrl']})\n')
+            t.write(f"## [{title}]({c['post']['blogPageUrl']})\n")
             content = c['post']['content']
 
             # 转换HTML为Markdown
@@ -257,7 +257,7 @@ def save_history(authkey, blogdomain, save_path='./results', sleep_time=0.1, lim
             post_title = '无标题'+str(post_id)
         print(f'文章标题：{post_title}，文章ID：{post_id}')
         with open(f'{save_path}/history/{post_title}.md', 'w', encoding='utf-8') as t:
-            t.write(f'## [{post_title}]({p['blogPageUrl']})\n')
+            t.write(f"## [{post_title}]({p['blogPageUrl']})\n")
             content = p['content']
             # 转换HTML为Markdown
             content = html2md(content)
