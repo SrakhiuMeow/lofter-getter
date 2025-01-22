@@ -1,10 +1,11 @@
 import requests
 import json
 from utils.get_by_api import get_subs, get_collection_list, get_history
-from utils.get_by_api import get_post
+from utils.get_by_api import get_post, get_page_comments
 from utils.proc_str import make_valid_filename, escape_for_url, html2md
 from utils.proc_img import replace_img_url, download_img
 from utils.cookie import get_lofter_authkey
+from utils.proc_comments import comments2md
 import os
 import time
 
@@ -123,21 +124,6 @@ def save_single_collection(collection_id, save_path='./results', save_img=True, 
 
             t.write(content)
             
-            if 'hotComments' in c and len(c['hotComments']) > 0:
-                t.write('\n\n---\n')
-                t.write(f'#### 热门评论\n')
-                for comment in c['hotComments']:
-                    nickname = comment['publisherMainBlogInfo']['blogNickName']
-                    bloghome = comment['publisherMainBlogInfo']['homePageUrl']
-                    t.write(f'- [{nickname}]({bloghome}):  {comment["content"]}\n')
-            elif 'comments' in c and len(c['comments']) > 0:
-                t.write('\n\n---\n')
-                t.write(f'#### 最新评论\n')
-                for comment in c['comments']:
-                    nickname = comment['publisherMainBlogInfo']['blogNickName']
-                    bloghome = comment['publisherMainBlogInfo']['homePageUrl']
-                    t.write(f'- [{nickname}]({bloghome}):  {comment["content"]}\n') 
-                
             t.write('\n\n---\n')
             t.write(f'#### 标签\n')
             for tag in c['post']['tagList']:
@@ -285,3 +271,33 @@ def save_history(authkey, blogdomain, save_path='./results', sleep_time=0.1, lim
     with open(f'{save_path}/history.json', 'w', encoding='utf-8') as f:
         json.dump(posts, f, ensure_ascii=False, indent=4)
         print(f'历史记录保存至 {save_path}/history.json')
+
+
+def save_comments(blog_id, post_id, save_path, rewrite, authkey=None, sleep_time=0.5):
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+
+    if not os.path.exists(save_path+'/comments'):
+        os.makedirs(save_path+'/comments')
+
+    limit_once = 10
+    idx = 0
+    data = get_page_comments(blog_id, post_id, idx, limit_once, authkey)
+    comments = data['list']
+    if 'hotList' in data:
+        hot_comments = data['hotList']
+    else:
+        hot_comments = []
+    idx += limit_once
+
+    while(len(data['list']) > 0):
+        time.sleep(sleep_time)
+        data = get_page_comments(blog_id, post_id, idx, limit_once, authkey)
+
+        comments += data['list']
+        idx += limit_once
+
+    with open(f'{save_path}/comments/{post_id}.md', 'w', encoding='utf-8') as f:
+        results = comments2md(comments, hot_comments)
+        f.write(results)
+        print(f'评论保存至 {save_path}/comments/{post_id}.md')

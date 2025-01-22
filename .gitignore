@@ -164,7 +164,7 @@ cython_debug/
 response/
 process/
 configs/
-test*/
+test*
 results/
 tempCodeRunnerFile.py
 .DS_Store
