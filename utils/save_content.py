@@ -6,6 +6,8 @@ from utils.proc_str import make_valid_filename, escape_for_url, html2md
 from utils.proc_img import replace_img_url, download_img
 from utils.cookie import get_lofter_authkey
 from utils.proc_comments import comments2md
+from utils.epub import  md_to_epub
+from utils.pdf import md_to_pdf
 import os
 import time
 
@@ -32,7 +34,7 @@ def save_single_post(blog_id, post_id, save_path='./results', rewrite=False):
             f.write(i['post']['content'])
 
 
-def save_single_collection(collection_id, save_path='./results', save_img=True, limit_once=50, rewrite=False, sleep_time=0.2, authkey=None):
+def save_single_collection(collection_id, save_path='./results', save_img=True, limit_once=50, rewrite=False, sleep_time=0.2, authkey=None, create_epub=False, create_pdf=False):
     '''
     保存合集内容
 
@@ -53,6 +55,7 @@ def save_single_collection(collection_id, save_path='./results', save_img=True, 
     collection_name = collection['collection']['name']
     collection_tags = collection['collection']['tags'].split(',')
     collection_description = collection['collection']['description']
+    author = collection['blogInfo']['blogNickName']
     print(f'合集名：{collection_name}，文章数量：{post_count}')
 
 
@@ -116,14 +119,12 @@ def save_single_collection(collection_id, save_path='./results', save_img=True, 
 
             # 转换HTML为Markdown
             content = html2md(content)
-            
             # 保存图片并替换URL
             if save_img:
                 content, img_list = replace_img_url(content, cvt2local=True)
                 download_img(img_list, img_path)
 
             t.write(content)
-            
             t.write('\n\n---\n')
             t.write(f'#### 标签\n')
             for tag in c['post']['tagList']:
@@ -134,6 +135,14 @@ def save_single_collection(collection_id, save_path='./results', save_img=True, 
                 t.write(f'\n\n上一篇： [{title_list[i-1]}](./{i}-{title_url_list[i-1]}.md)\n')
             if i < len(title_list) - 1:
                 t.write(f'\n\n下一篇： [{title_list[i+1]}](./{i+2}-{title_url_list[i+1]}.md)\n')
+
+    # 保存为epub文档
+    if create_epub:
+        md_to_epub(collection_path, collection_name, collection_path, author)
+
+    # 保存为pdf文档
+    if create_pdf:
+        md_to_pdf(collection_path, collection_name, collection_path)
 
 
 def save_all_collections(authkey, save_path='./results', save_img=True, rewrite=False, sleep_time=0.2):

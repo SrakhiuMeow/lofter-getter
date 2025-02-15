@@ -2,3 +2,7 @@ requests
 brotli
 browser-cookie3
 pysqlite3
+Markdown
+EbookLib
+fpdf
+beautifulsoup4
