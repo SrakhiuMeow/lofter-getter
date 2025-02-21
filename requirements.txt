@@ -4,5 +4,5 @@ browser-cookie3
 pysqlite3
 Markdown
 EbookLib
-fpdf
+fpdf2
 beautifulsoup4
