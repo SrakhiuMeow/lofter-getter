@@ -114,13 +114,23 @@ def save_single_collection(collection_id, save_path='./results', save_img=True, 
             t.write(f"## [{title}]({c['post']['blogPageUrl']})\n")
             content = c['post']['content']
 
+            # 判断文章类型
+            type = c['post']['type']
+            if type == 2 : # 图片
+                images = json.loads(c['post']['photoLinks'])
+                img_content = ''
+                for img in images:
+                    img_content += f"<img src=\"{img['raw']}?\">\n"
+                content = img_content + content
+
+
             # 转换HTML为Markdown
             content = html2md(content)
             
             # 保存图片并替换URL
             if save_img:
-                content, img_list = replace_img_url(content, cvt2local=True)
-                download_img(img_list, img_path)
+                content, img_url_list, img_name_list = replace_img_url(content, title, cvt2local=True, rename=True)
+                download_img(img_url_list, img_name_list, img_path)
 
             t.write(content)
             
