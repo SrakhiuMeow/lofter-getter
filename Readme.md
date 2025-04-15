@@ -46,6 +46,24 @@ python collection.py --collection_id 合集ID
 
 目前会将合集内容以md的形式保存下来
 
+### batch_collections.py
+根据多个合集ID批量下载合集内容  
+```bash
+python batch_collections.py --collection_ids 合集ID1，合集ID2
+```
+不同合集ID之间用逗号隔开，请注意不要一次添加太多，并根据情况修改limit_once参数
+
+可选参数：
+- `--save_path 保存路径` 指定保存路径，默认在当前目录的results文件内
+- `--save_img` 将图片内容保存到本地(默认保存图片链接)
+- `--rewrite` 覆盖本地已下载的内容
+- `--limit_once 单次抓取数` 单次抓取的文章数量(默认50张)
+- `--epub` 将合集的所有md文件打包存为epub格式
+- `--pdf` 将合集的所有md文件打包存为pdf格式
+
+会将合集内所有文章保存至`保存路径/合集名`内  
+并在保存路径下建立以合集名为文件名的目录文件，方便使用
+
 ### subscrption.py
 根据从浏览器获取的登录信息获得订阅合集的信息 
 ```bash
