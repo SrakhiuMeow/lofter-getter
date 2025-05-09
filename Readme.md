@@ -64,6 +64,29 @@ python batch_collections.py --collection_ids 合集ID1，合集ID2
 会将合集内所有文章保存至`保存路径/合集名`内  
 并在保存路径下建立以合集名为文件名的目录文件，方便使用
 
+### save_collections_by_author.py
+根据作者ID批量下载合集内容  
+```bash
+python save_collections_by_author.py --author_id 是作者id不是用户名
+```
+注意！！！！！！！！！！！！！！！！！！！！
+该内容要求用户登录，所以需要cookie值获取用户权限。
+此处cookie值获取以chrome为例
+a. 在浏览器登录lofter
+b. 在lofter页面，右键->inspect->Application->Cookies
+c.找到该文件夹写cookie.txt 文件中要求的两个cookie，复制粘贴值到文件中
+
+可选参数：
+- `--save_path 保存路径` 指定保存路径，默认在当前目录的results文件内
+- `--save_img` 将图片内容保存到本地(默认保存图片链接)
+- `--rewrite` 覆盖本地已下载的内容
+- `--limit_once 单次抓取数` 单次抓取的文章数量(默认50张)
+- `--epub` 将合集的所有md文件打包存为epub格式
+- `--pdf` 将合集的所有md文件打包存为pdf格式
+
+会将合集内所有文章保存至`保存路径/合集名`内  
+并在保存路径下建立以合集名为文件名的目录文件，方便使用
+
 ### subscrption.py
 根据从浏览器获取的登录信息获得订阅合集的信息 
 ```bash

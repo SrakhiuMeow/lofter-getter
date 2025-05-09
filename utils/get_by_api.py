@@ -1,5 +1,7 @@
-import requests
 import json
+
+import requests
+
 try:
     import brotli
 except ImportError:
@@ -76,6 +78,34 @@ def get_collection_list(collection_id, offset, limit=15, authkey=None, order=1):
     response = requests.post(url, params=params, data=payload, headers=headers)
 
     return json.loads(response.text)['response']
+
+def get_collections_by_author(author_id,offset=0, limit=15, authkey=None,order=1):
+    #获取一个作者的所有合集信息
+    #order为返回顺序
+    url="https://api.lofter.com/v1.1/postCollection.api?product=lofter-android-8.0.18"
+    blog_domain=author_id+".lofter.com"
+    file_path="utils\cookie.txt"
+    with open(file_path, "r", encoding="utf-8") as f:
+        cookie_str = f.read().strip()
+
+    headers = {
+        "Host": "api.lofter.com",
+          "Cookie": cookie_str
+    }
+
+    data = {
+    "blogdomain": blog_domain,
+    "method": "getCollectionList",
+    "needViewCount": "1",
+}
+    response = requests.post(url, headers=headers,data=data, verify=False)
+
+    try:
+        return json.loads(response.text)['response']
+    except KeyError:
+        return None
+
+
 
 def get_collection(blog_domain, collection_id, blog_id, authkey=None):
     # 获取合集信息
@@ -218,3 +248,5 @@ def get_comments_by_pid(blog_id, post_id, pid, offset=0, limit=50):
     response = requests.get(url, params=params, headers=headers)
 
     return json.loads(response.text)['data']
+
+
