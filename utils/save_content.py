@@ -58,6 +58,8 @@ def save_single_collection(collection_id, save_path='./results', save_img=True, 
 
     post_count = collection['collection']['postCount']
     collection_name = collection['collection']['name']
+    collection_name = make_valid_filename(collection_name)
+
     collection_tags = collection['collection']['tags'].split(',')
     collection_description = collection['collection']['description']
     author = collection['blogInfo']['blogNickName']
