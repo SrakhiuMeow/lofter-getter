@@ -11,6 +11,11 @@ from utils.pdf import md_to_pdf
 import os
 import time
 
+def untitled_id_generator():
+    n = 0
+    while True:
+        yield f'{n}'
+        n += 1
 
 def save_single_post(blog_id, post_id, save_path='./results', rewrite=False):
     '''
@@ -83,8 +88,13 @@ def save_single_collection(collection_id, save_path='./results', save_img=True, 
         f.write(collection_description + '\n\n')
         f.write('---\n')
         f.write(f'#### 目录(共{post_count}篇)\n')
+
+        id_gen = untitled_id_generator()
+
         for i, c in enumerate(collection_list):
             title = c['post']['title']
+            if (len(title) == 0):
+                title = c['post']['noticeLinkTitle'] if 'noticeLinkTitle' in c['post'] else 'untitled'+next(id_gen)
 
             # 调整标题格式
             title = make_valid_filename(title)
