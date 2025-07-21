@@ -21,6 +21,8 @@ def make_valid_filename(filename):
 
     invalid_chars = ['\\', '/', ':', '*', '?', '"', '<', '>', '|']
     filename = replace(filename, invalid_chars, '_')
+
+    filename.replace(' ', '')
     
     return filename
 
