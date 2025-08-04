@@ -6,4 +6,3 @@ ebookLib
 fpdf
 fpdf2
 beautifulsoup4
-pysqlite3
