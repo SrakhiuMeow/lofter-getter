@@ -42,8 +42,8 @@ def html2md(content):
     # 将Lofter原生的HTML内容转换为markdown格式
 
     # 去除多余标签
-    pattern = re.compile(r'<p id=".*"  >')
-    content = re.sub(pattern, '', content)
+    # pattern = re.compile(r'<p id=".*"  >')
+    # content = re.sub(pattern, '', content)
     content = content.replace('</p>', '')
     content = content.replace('　　', '')
     content = content.replace(' \n', '\n')
