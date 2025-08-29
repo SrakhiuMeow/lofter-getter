@@ -44,11 +44,11 @@ def html2md(content):
     # 去除多余标签
     # pattern = re.compile(r'<p id=".*"  >')
     # content = re.sub(pattern, '', content)
-    content = content.replace('</p>', '')
+    # content = content.replace('</p>', '')
     content = content.replace('　　', '')
     content = content.replace(' \n', '\n')
     content = content.replace('&nbsp;', ' ')
-    content = content.replace('<br /> ', '')
+    # content = content.replace('<br /> ', '')
 
 
     # 调整为markdown格式
