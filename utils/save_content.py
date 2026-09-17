@@ -35,7 +35,9 @@ def save_single_post(blog_id, post_id, save_path='./results', rewrite=False):
     posts = get_post(blog_id, post_id)['posts']
     for i in posts:
         print(i['post']['title'])
-        with open(f'{save_path}/{i["post"]["title"].replace("/", "_")}.html', 'w', encoding='utf-8') as f:
+        title = (i['post'].get('title') or i['post'].get('noticeLinkTitle') or f'untitled_{post_id}')
+        title = make_valid_filename(title) or f'untitled_{post_id}'
+        with open(f'{save_path}/{title}.html', 'w', encoding='utf-8') as f:
             f.write(i['post']['content'])
 
 
@@ -69,7 +71,8 @@ def save_single_collection(collection_id, save_path='./results', save_img=True, 
     collection_list = []
     for i in range(0, post_count, limit_once):
         time.sleep(sleep_time)
-        collection_list += get_collection_list(collection_id,  i, limit_once, authkey=authkey)['items']
+        batch = get_collection_list(collection_id, i, limit_once, authkey=authkey) or {}
+        collection_list += list(batch.get('items') or [])
 
     collection_path = f'{save_path}/{collection_name}'
     if not os.path.exists(collection_path):
@@ -159,13 +162,19 @@ def save_single_collection(collection_id, save_path='./results', save_img=True, 
             if i < len(title_list) - 1:
                 t.write(f'\n\n下一篇： [{title_list[i+1]}](./{i+2}-{title_url_list[i+1]}.md)\n')
 
-    # 保存为epub文档
+    # 保存为epub文档（失败不拖垮整次合集下载）
     if create_epub:
-        md_to_epub(collection_path, collection_name, collection_path, author)
+        try:
+            md_to_epub(collection_path, collection_name, collection_path, author)
+        except Exception as e:
+            print(f'合集 EPUB 生成失败（正文已保存）: {e}')
 
     # 保存为pdf文档
     if create_pdf:
-        md_to_pdf(collection_path, collection_name, collection_path)
+        try:
+            md_to_pdf(collection_path, collection_name, collection_path)
+        except Exception as e:
+            print(f'合集 PDF 生成失败: {e}')
 
 
 def save_all_collections(authkey, save_path='./results', save_img=True, rewrite=False, sleep_time=0.2):
